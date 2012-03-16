@@ -1,7 +1,7 @@
 """
-========================================
-`skloupe`: an image viewer for `skimage`
-========================================
+==============================================
+`skloupe`: interactive image viewer for Python
+==============================================
 
 `skloupe` provides an image viewing interface based on matplotlib_.
 
