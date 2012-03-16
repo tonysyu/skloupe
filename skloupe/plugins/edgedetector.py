@@ -27,11 +27,11 @@ class EdgeDetector(Plugin):
         Plugin.__init__(self, image_window, figure=figure)
 
         self.slider_sigma = Slider(ax_sigma, sigma_range, label='sigma',
-                                   value=1, on_slide=self.update_image)
+                                   value=1, on_release=self.update_image)
         self.slider_low = Slider(ax_low, low_range, label='low',
-                                 value=0.5, on_slide=self.update_image)
+                                 value=0.5, on_release=self.update_image)
         self.slider_high = Slider(ax_high, high_range, label='high',
-                                  value=0.7, on_slide=self.update_image)
+                                  value=0.7, on_release=self.update_image)
         self.slider_low.slidermax = self.slider_high
         self.slider_high.slidermin = self.slider_low
 
