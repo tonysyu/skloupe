@@ -15,11 +15,17 @@ class Plugin(object):
     useblit : bool
         If True, use blitting to speed up animation. Only available on some
         backends. If None, set to True when using Agg backend, otherwise False.
+    figure : :class:`~matplotlib.figure.Figure`
+        If None, create a figure with a single axes.
 
     Attributes
     ----------
     ax : :class:`~matplotlib.axes.Axes`
-        The parent axes for the widget
+        The parent axes for the widget. Note, if `figure` is passed as a
+        parameter, `ax` is set to None since there could be multiple axes
+        attached to the figure.
+    figure : :class:`~matplotlib.figure.Figure`
+        The parent figure for the widget.
     canvas : :class:`~matplotlib.backend_bases.FigureCanvasBase` subclass
         The parent figure canvs for the widget.
     imgview : ImageViewer
@@ -30,15 +36,21 @@ class Plugin(object):
         If False, the widget does not respond to events.
     """
 
-    def __init__(self, image_window, useblit=None, figsize=None):
+    def __init__(self, image_window, useblit=None, figsize=None, figure=None):
         self.imgview = image_window
         self.image = self.imgview._img
 
-        figsize = plt.rcParams['figure.figsize'] if figsize is None else figsize
-        figure = plt.figure(figsize=figsize)
-        self.figure = figure
-        self.canvas = figure.canvas
-        self.ax = figure.add_subplot(111)
+        if figure is None:
+            if figsize is None:
+                figsize = plt.rcParams['figure.figsize']
+            figure = plt.figure(figsize=figsize)
+            self.figure = figure
+            self.canvas = figure.canvas
+            self.ax = figure.add_subplot(111)
+        else:
+            self.figure = figure
+            self.canvas = figure.canvas
+            self.ax = None
 
         if useblit is None:
             useblit = True if mpl.backends.backend.endswith('Agg') else False
