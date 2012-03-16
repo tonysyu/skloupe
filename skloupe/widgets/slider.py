@@ -19,6 +19,9 @@ class Slider(mwidgets.Slider):
         Initial value. If None, set to value in middle of value range.
     on_slide : function
         Callback function for slide event. Function should expect slider value.
+    on_release : function
+        Callback function for mouse release event. Function should expect
+        slider value.
     value_fmt : str
         Format string for formatting the slider text.
     slidermin, slidermax : float
@@ -44,9 +47,8 @@ class Slider(mwidgets.Slider):
     """
 
     def __init__(self, ax, value_range, label='', value=None, on_slide=None,
-                 value_fmt='%1.2f', slidermin=None, slidermax=None,
-                 dragging=True, pad=0.02):
-
+                 on_release=None, value_fmt='%1.2f', slidermin=None,
+                 slidermax=None, dragging=True, pad=0.02):
         # The following block is copied from the matplotlib branch:
         #   https://github.com/tonysyu/matplotlib/tree/base-widget
         # If/when branch is incorporated into matplotlib, replace block with:
@@ -80,6 +82,7 @@ class Slider(mwidgets.Slider):
 
         self.connect_event('button_press_event', self._update)
         self.connect_event('button_release_event', self._update)
+        self.connect_event('button_release_event', self.on_release)
         if dragging:
             self.connect_event('motion_notify_event', self._update)
 
@@ -102,6 +105,7 @@ class Slider(mwidgets.Slider):
         self.observers = {}
         if on_slide is not None:
             self.on_changed(on_slide)
+        self.release_callback = on_release
 
         # Attributes for matplotlib.widgets.Slider compatibility
         self.closedmin = self.closedmax = True
@@ -121,10 +125,8 @@ class Slider(mwidgets.Slider):
 
     def set_val(self, value):
         """Set value of slider."""
-        # Override matplotlib.widgets.Slider to update graphics objects.
-
+        # Override matplotlib.widgets.Slider.set_val
         self.value = value
-
 
         if self.drawon:
             self.ax.figure.canvas.draw()
@@ -133,6 +135,10 @@ class Slider(mwidgets.Slider):
 
         for cid, func in self.observers.iteritems():
             func(value)
+
+    def on_release(self, event):
+        if self.release_callback is not None:
+            self.release_callback(self.value)
 
     # The following methods are copied from the matplotlib branch:
     #   https://github.com/tonysyu/matplotlib/tree/base-widget
@@ -161,6 +167,4 @@ class Slider(mwidgets.Slider):
         """
         return not self.active
     #~~~~
-
-
 
