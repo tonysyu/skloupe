@@ -1,11 +1,11 @@
-==========================
-Image viewer for `skimage`
-==========================
+=======================================
+Image Viewer SciKit (Toolbox for SciPy)
+=======================================
 
-`skloupe` provides an image viewing interface based on matplotlib_ and is
-closely affiliated with skimage_. The name is a combination of SciKits_
-(toolkits for scientific python) and "loupe_" (a magnifying glass used to look
-at images).
+`scikits-loupe` (a.k.a. `skloupe`) provides an image viewing interface based on
+matplotlib_ and is closely affiliated with skimage_. The name is a combination
+of SciKits_ (toolkits for scientific python) and "loupe_" (a magnifying glass
+used to look at images).
 
 Some of the functionality for viewing image collection was borrowed from
 Christoph Gohlke's TIFFFile_ imshow.
@@ -22,7 +22,7 @@ Requirements
 Installation from source
 ========================
 
-`skloupe` may be installed globally using::
+`scikits-loupe` may be installed globally using::
 
    $ git clone git@github.com:tonysyu/skloupe.git
    $ cd skloupe

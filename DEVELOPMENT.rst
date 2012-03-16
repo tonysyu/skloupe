@@ -1,8 +1,8 @@
-=======================
-Contribute to `skloupe`
-=======================
+=============================
+Contribute to `scikits-loupe`
+=============================
 
-It's easy to contribute to `skloupe`; just fork the project on github::
+It's easy to contribute to `scikits-loupe`; just fork the project on github::
 
     $ git clone git@github.com:tonysyu/skloupe.git
 
@@ -15,7 +15,7 @@ to a branch_) and the submit a `pull request`_. Also, we'll try to follow the
 Organization
 ============
 
-`skloupe` is organized into the following subpackages:
+`scikits-loupe` is organized into the following subpackages:
 
 utils
    Basic utilities shared by other subpackages.

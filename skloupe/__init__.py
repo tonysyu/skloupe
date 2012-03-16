@@ -1,9 +1,10 @@
 """
-==============================================
-`skloupe`: interactive image viewer for Python
-==============================================
+====================================================
+`scikits-loupe`: interactive image viewer for Python
+====================================================
 
-`skloupe` provides an image viewing interface based on matplotlib_.
+`scikits-loupe` (a.k.a. `skloupe`) provides an image viewing interface based on
+matplotlib_.
 
 
 ===========
