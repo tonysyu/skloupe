@@ -49,9 +49,9 @@ class Slider(mwidgets.Slider):
     def __init__(self, ax, value_range, label='', value=None, on_slide=None,
                  on_release=None, value_fmt='%1.2f', slidermin=None,
                  slidermax=None, dragging=True, pad=0.02):
-        # The following block is copied from the matplotlib branch:
-        #   https://github.com/tonysyu/matplotlib/tree/base-widget
-        # If/when branch is incorporated into matplotlib, replace block with:
+        # The following block is unnecessary for versions newer than:
+        #   Matplotlib github master; after March 16, 2012
+        # When the next version (Matplotlib 1.2) is sufficiently old, delete:
         #   mwidgets.AxesWidget.__init__(self, ax)
         #~~~~
         self.ax = ax
@@ -140,9 +140,9 @@ class Slider(mwidgets.Slider):
         if self.release_callback is not None:
             self.release_callback(self.value)
 
-    # The following methods are copied from the matplotlib branch:
-    #   https://github.com/tonysyu/matplotlib/tree/base-widget
-    # If/when branch is incorporated into matplotlib, delete:
+    # The following methods are unnecessary for versions newer than:
+    #   Matplotlib github master; after March 16, 2012
+    # When the next version (Matplotlib 1.2) is sufficiently old, delete:
     #   connect_event, disconnect_events, ignore
     #~~~~
     def connect_event(self, event, callback):
