@@ -1,10 +1,12 @@
 import matplotlib.widgets as mwidgets
 
+from . import base
+
 
 __all__ = ['Slider']
 
 
-class Slider(mwidgets.Slider):
+class Slider(base.MPLWidgetCompatibility, mwidgets.Slider):
     """Slider widget to select a value from a floating point range.
 
     Parameters
@@ -49,16 +51,9 @@ class Slider(mwidgets.Slider):
     def __init__(self, ax, value_range, label='', value=None, on_slide=None,
                  on_release=None, value_fmt='%1.2f', slidermin=None,
                  slidermax=None, dragging=True, pad=0.02):
-        # The following block is unnecessary for versions newer than:
-        #   Matplotlib github master; after March 16, 2012
-        # When the next version (Matplotlib 1.2) is sufficiently old, delete:
+        # When Matplotlib 1.2 is sufficiently old, replace with:
         #   mwidgets.AxesWidget.__init__(self, ax)
-        #~~~~
-        self.ax = ax
-        self.canvas = ax.figure.canvas
-        self.cids = []
-        self.active = True
-        #~~~~
+        base.MPLWidgetCompatibility.__init__(self, ax)
 
         self.valmin, self.valmax = value_range
         if value is None:
@@ -139,32 +134,4 @@ class Slider(mwidgets.Slider):
     def on_release(self, event):
         if self.release_callback is not None:
             self.release_callback(self.value)
-
-    # The following methods are unnecessary for versions newer than:
-    #   Matplotlib github master; after March 16, 2012
-    # When the next version (Matplotlib 1.2) is sufficiently old, delete:
-    #   connect_event, disconnect_events, ignore
-    #~~~~
-    def connect_event(self, event, callback):
-        """Connect callback with an event.
-
-        This should be used in lieu of `figure.canvas.mpl_connect` since this
-        function stores call back ids for later clean up.
-        """
-        cid = self.canvas.mpl_connect(event, callback)
-        self.cids.append(cid)
-
-    def disconnect_events(self):
-        """Disconnect all events created by this widget."""
-        for c in self.cids:
-            self.canvas.mpl_disconnect(c)
-
-    def ignore(self, event):
-        """Return True if event should be ignored.
-
-        This method (or a version of it) should be called at the beginning
-        of any event callback.
-        """
-        return not self.active
-    #~~~~
 
