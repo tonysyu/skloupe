@@ -16,6 +16,14 @@ class ImageViewer(object):
     This window is a simple container object that holds a Matplotlib axes
     for showing images. This doesn't subclass the Matplotlib axes (or figure)
     because there be dragons.
+
+    Attributes
+    ----------
+    image : array
+        Image being viewed.
+    climits : tuple
+        Intensity range (minimum, maximum) of *displayed* image. Intensity
+        values above and below limits are clipped, but remain in image array.
     """
 
     def __init__(self, image, **kwargs):
@@ -47,6 +55,15 @@ class ImageViewer(object):
     def image(self, image):
         self._image = image
         self.ax.images[0].set_array(image)
+
+    @property
+    def climits(self):
+        return self._imgplot.get_clim()
+
+    @climits.setter
+    def climits(self, limits):
+        cmin, cmax = limits
+        self._imgplot.set_clim(vmin=cmin, vmax=cmax)
 
     def connect_event(self, event, callback):
         cid = self.canvas.mpl_connect(event, callback)
