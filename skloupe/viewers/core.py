@@ -17,10 +17,17 @@ class ImageViewer(object):
     for showing images. This doesn't subclass the Matplotlib axes (or figure)
     because there be dragons.
 
-    Attributes
+    Parameters
     ----------
     image : array
         Image being viewed.
+
+    Attributes
+    ----------
+    canvas, fig, ax : Matplotlib canvas, figure, and axes
+        Matplotlib canvas, figure, and axes used to display image.
+    image : array
+        Image being viewed. Setting this value will update the displayed frame.
     climits : tuple
         Intensity range (minimum, maximum) of *displayed* image. Intensity
         values above and below limits are clipped, but remain in image array.
@@ -99,6 +106,23 @@ class ImageViewer(object):
 
 
 class CollectionViewer(ImageViewer):
+    """Window for displaying image collections.
+
+    Select the displayed frame of the image collection using the slider or
+    with the following keyboard shortcuts:
+
+        left/right arrows
+            Previous/next image in collection.
+        number keys, 0--9
+            0% to 90% of collection. For example, "5" goes to the image in the
+            middle (i.e. 50%) of the collection.
+        home/end keys
+            First/last image in collection.
+
+    Subclasses and plugins will likely extend the `update_image` method to add
+    custom overlays or filter the displayed image.
+
+    """
 
     def __init__(self, image_collection, **kwargs):
         self.image_collection = image_collection
@@ -114,15 +138,12 @@ class CollectionViewer(ImageViewer):
         self.ax.set_position([0, 1 - h_old/h_new, 1, h_old/h_new])
         ax_slider = self.fig.add_axes([0.1, 0, 0.8, 0.5 / h_new])
         idx_range = (0, self.num_images-1)
-        self.slider = Slider(ax_slider, idx_range, on_slide=self.update_image,
+        self.slider = Slider(ax_slider, idx_range, on_slide=self.update_index,
                              value=0, value_fmt='%i')
         self.connect_event('key_press_event', self.on_keypressed)
 
-    def set_image(self, image):
-        self.image = image
-        self.fig.canvas.draw()
-
-    def update_image(self, index):
+    def update_index(self, index):
+        """Select image on display using index into image collection."""
         index = int(round(index))
 
         if index == self.index:
@@ -134,21 +155,31 @@ class CollectionViewer(ImageViewer):
 
         self.index = index
         self.slider.value = index
-        self.set_image(self.image_collection[index])
+        self.update_image(self.image_collection[index])
+
+    def update_image(self, image):
+        """Update displayed image.
+
+        This method can be overridden or extended in subclasses and plugins to
+        react to image changes.
+        """
+        self.image = image
+        # The following call to draw may be unnecessary.
+        self.fig.canvas.draw()
 
     def on_keypressed(self, event):
         key = event.key
         if str(key) in '0123456789':
             index = 0.1 * int(key) * self.num_images
-            self.update_image(index)
+            self.update_index(index)
         elif key == 'right':
-            self.update_image(self.index + 1)
+            self.update_index(self.index + 1)
         elif key == 'left':
-            self.update_image(self.index - 1)
+            self.update_index(self.index - 1)
         elif key == 'end':
-            self.update_image(self.num_images - 1)
+            self.update_index(self.num_images - 1)
         elif key == 'home':
-            self.update_image(0)
+            self.update_index(0)
 
 
 def imshow(image, **kwargs):
