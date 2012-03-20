@@ -122,9 +122,18 @@ class CollectionViewer(ImageViewer):
     Subclasses and plugins will likely extend the `update_image` method to add
     custom overlays or filter the displayed image.
 
+    Parameters
+    ----------
+    image_collection : list of images
+        List of images to be displayed.
+    update : {'on_slide' | 'on_release'}
+        Control whether image is updated on slide or release of the image
+        slider. Using 'on_release' will give smoother behavior when displaying
+        large images or when writing a plugin/subclass that requires heavy
+        computation.
     """
 
-    def __init__(self, image_collection, **kwargs):
+    def __init__(self, image_collection, update='on_slide', **kwargs):
         self.image_collection = image_collection
         self.index = 0
         self.num_images = len(self.image_collection)
@@ -138,8 +147,11 @@ class CollectionViewer(ImageViewer):
         self.ax.set_position([0, 1 - h_old/h_new, 1, h_old/h_new])
         ax_slider = self.fig.add_axes([0.1, 0, 0.8, 0.5 / h_new])
         idx_range = (0, self.num_images-1)
-        self.slider = Slider(ax_slider, idx_range, on_slide=self.update_index,
-                             value=0, value_fmt='%i')
+
+        slider_kws = dict(value=0, value_fmt='%i')
+        slider_kws[update] = self.update_index
+        self.slider = Slider(ax_slider, idx_range, **slider_kws)
+
         self.connect_event('key_press_event', self.on_keypressed)
 
     def update_index(self, index):
