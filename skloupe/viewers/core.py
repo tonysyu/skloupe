@@ -95,10 +95,10 @@ class CollectionViewer(ImageViewer):
         h_new = h_old + 0.5
         self.fig.set_figheight(h_new)
         self.ax.set_position([0, 1 - h_old/h_new, 1, h_old/h_new])
-        ax_slider = self.fig.add_axes([0.05, 0, 0.9, 0.5 / h_new])
+        ax_slider = self.fig.add_axes([0.1, 0, 0.8, 0.5 / h_new])
         idx_range = (0, self.num_images-1)
         self.slider = Slider(ax_slider, idx_range, on_slide=self.update_image,
-                             value=0, value_fmt=None)
+                             value=0, value_fmt='%i')
         self.connect_event('key_press_event', self.on_keypressed)
 
     def set_image(self, image):
