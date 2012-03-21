@@ -6,6 +6,7 @@ from numpy import linspace, zeros, ones
 from .base import Plugin
 from ..widgets.slider import Slider
 
+
 __all__ = ['ContrastSetter']
 
 
