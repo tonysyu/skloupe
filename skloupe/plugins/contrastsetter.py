@@ -11,7 +11,7 @@ __all__ = ['ContrastSetter']
 
 class ContrastSetter(Plugin):
     """Plugin to manualy adjust the contrast of an image.
-    Ony linear adjustment are possible. Source image is not modified.
+    Ony linear adjustments are possible. Source image is not modified.
 
     Parameters
     ----------
@@ -42,10 +42,10 @@ class ContrastSetter(Plugin):
         self.ax_histo.set_xticks([])
         self.ax_histo.set_yticks([])
 
-        self.slider_high = Slider(ax_high, clip, label='Maximum',
+        self.slider_high = Slider(ax_high, clip, label='Max',
                                   value=high_value,
                                   on_release=self.update_image)
-        self.slider_low = Slider(ax_low, clip, label='Minimum',
+        self.slider_low = Slider(ax_low, clip, label='Min',
                                  value=low_value,
                                  on_release=self.update_image)
         self.slider_low.slidermax = self.slider_high
@@ -75,7 +75,7 @@ class ContrastSetter(Plugin):
 
     def update_image(self, event = None):
         self.draw_colorbar()
-        self.imgview.image = self.original_image.clip(self.low, self.high)
+        self.imgview.climits = (self.low, self.high)
         self.imgview.redraw()
         self.redraw()
         
@@ -90,17 +90,17 @@ class ContrastSetter(Plugin):
                              extent = extent)
 
     def reset(self):
-        self.slider_high.value = self.bin_centers
-        low_value, high_value = self.bin_centers[[0, -1]]
+        low, high = self.bin_centers[[0, -1]]
+        self.slider_low.value = low
+        self.slider_high.value = high
         self.update_image()
 
     def _expand_bonds(self, event):
         if not event.inaxes: return
-        center = (self.high + self.low) / 2.
         span = self.high - self.low
-        low = min(self.slider_low.value - span / 20.,
+        low = max(self.slider_low.value - span / 20.,
                   self.slider_low.valmin)
-        high = max(self.slider_high.value + span / 20.,
+        high = min(self.slider_high.value + span / 20.,
                    self.slider_high.valmax)
         self.slider_low.value = low
         self.slider_high.value = high
@@ -108,12 +108,9 @@ class ContrastSetter(Plugin):
 
     def _restrict_bonds(self, event):
         if not event.inaxes: return
-        center = (self.high + self.low) / 2.
         span = self.high - self.low
-        low = min(self.slider_low.value + span / 20.,
-                  self.slider_high.value - span / 20.)
-        high = max(self.slider_high.value - span / 20.,
-                   self.slider_low.value + span / 20.)
+        low = self.slider_low.value + span / 20.
+        high = self.slider_high.value - span / 20.
         self.slider_low.value = low
         self.slider_high.value = high
         self.update_image()
