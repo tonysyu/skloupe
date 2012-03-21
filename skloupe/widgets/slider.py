@@ -68,7 +68,7 @@ class Slider(base.MPLWidgetCompatibility, mwidgets.Slider):
 
         self.line_low, = ax.plot(x_low, [y0, y0], color='0.5', lw=2)
         self.line_high, = ax.plot(x_high, [y0, y0], color='0.7', lw=2)
-        self.val_handle, = ax.plot(value, y0, 'o',
+        self.val_handle, = ax.plot(value, y0, 'o', clip_on=False,
                                    mec='0.4', mfc='0.6', markersize=8)
 
         ax.set_xlim(value_range)
