@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from skimage.util.dtype import dtype_range
 from skimage.exposure import histogram
-from numpy import linspace
+from numpy import linspace, zeros, ones
 
 from .base import Plugin
 from ..widgets.slider import Slider
@@ -80,15 +80,33 @@ class ContrastSetter(Plugin):
         self.redraw()
         
     def draw_colorbar(self):
-        self.colorbar = linspace(self.low, self.high,
-                                 256).reshape((1,256))
-        extent = (self.low, self.high,
-                  self.ax_histo.axis()[2], self.ax_histo.axis()[3])
-        if len(self.ax_histo.images) > 0 :
-            del self.ax_histo.images[-1]
-        self.ax_histo.imshow(self.colorbar, aspect = 'auto',
-                             extent = extent)
-
+        colorbar = linspace(self.low, self.high,
+                            256).reshape((1,256))
+        cbar_extent = (self.low,
+                       self.high,
+                       self.ax_histo.axis()[2],
+                       self.ax_histo.axis()[3])
+        black_rectangle = zeros((1,2))
+        black_extent = (self.ax_histo.axis()[0],
+                        self.low,
+                        self.ax_histo.axis()[2],
+                        self.ax_histo.axis()[3])
+        white_rectangle = ones((1,2)) * self.bin_centers[-1]
+        white_extent = (self.high,
+                        self.ax_histo.axis()[1],
+                        self.ax_histo.axis()[2],
+                        self.ax_histo.axis()[3])
+        if len(self.ax_histo.images) > 2:
+            del self.ax_histo.images[-3:]
+        self.ax_histo.imshow(black_rectangle, aspect='auto',
+                             extent = black_extent)
+        self.ax_histo.imshow(white_rectangle, aspect='auto',
+                             extent = white_extent,
+                             vmin=self.bin_centers[0],
+                             vmax=self.bin_centers[-1])
+        self.ax_histo.imshow(colorbar, aspect = 'auto',
+                             extent = cbar_extent)
+        
     def reset(self):
         low, high = self.bin_centers[[0, -1]]
         self.slider_low.value = low
