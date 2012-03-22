@@ -39,6 +39,10 @@ class ContrastSetter(Plugin):
         self.cmin = self.bin_centers[0]
         self.cmax = self.bin_centers[-1]
 
+        # draw marker lines before histogram so they're behind histogram
+        self.low_marker = self.ax_hist.axvline(self.cmin, color='w')
+        self.high_marker = self.ax_hist.axvline(self.cmax, color='k')
+
         ax_hist.step(self.bin_centers, self.hist, color='r', lw=2, alpha=1.)
         self.ax_hist.set_xlim(self.cmin, self.cmax)
         self.ax_hist.set_xticks([])
@@ -102,6 +106,8 @@ class ContrastSetter(Plugin):
         self.black_bg.set_extent((xmin, self.low, ymin, ymax))
         self.white_bg.set_extent((self.high, xmax, ymin, ymax))
         self.grad_bg.set_extent((self.low, self.high, ymin, ymax))
+        self.low_marker.set_xdata([self.low, self.low])
+        self.high_marker.set_xdata([self.high, self.high])
 
     def reset(self):
         self.slider_low.value = self.cmin
