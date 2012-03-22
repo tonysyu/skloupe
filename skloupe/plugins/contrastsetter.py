@@ -11,8 +11,9 @@ __all__ = ['ContrastSetter']
 
 
 class ContrastSetter(Plugin):
-    """Plugin to manualy adjust the contrast of an image.
-    Ony linear adjustments are possible. Source image is not modified.
+    """Plugin to manually adjust the contrast of an image.
+
+    Only linear adjustments are possible. Source image is not modified.
 
     Parameters
     ----------
@@ -80,7 +81,7 @@ class ContrastSetter(Plugin):
         helpstr = ("ContrastSetter plugin\n"
                    "---------------------\n"
                    "+ and - keys or mouse scroll\n"
-                   "also change the contrast\n")
+                   "to change the contrast\n")
         return helpstr
 
     @property
