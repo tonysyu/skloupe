@@ -22,9 +22,11 @@ class ContrastSetter(Plugin):
     """
 
     def __init__(self, image_window):
-        figure, axes = plt.subplots(nrows=3, figsize=(6.5, 3))
-        ax_histo, ax_low, ax_high = axes
-        self.ax_histo = ax_histo
+        figure = plt.figure(figsize=(6.5, 2))
+        ax_hist = plt.subplot2grid((6, 1), (0, 0), rowspan=4)
+        ax_low = plt.subplot2grid((6, 1), (4, 0), rowspan=1)
+        ax_high = plt.subplot2grid((6, 1), (5, 0), rowspan=1)
+        self.ax_hist = ax_hist
 
         Plugin.__init__(self, image_window, figure=figure)
 
@@ -37,11 +39,11 @@ class ContrastSetter(Plugin):
         low_value, high_value = self.bin_centers[[0, -1]]
         clip = low_value, high_value
 
-        hist_lines = ax_histo.step(self.bin_centers, self.hist,
+        hist_lines = ax_hist.step(self.bin_centers, self.hist,
                                    color='r', lw=2, alpha=1.)
-        self.ax_histo.set_xlim(low_value, high_value)
-        self.ax_histo.set_xticks([])
-        self.ax_histo.set_yticks([])
+        self.ax_hist.set_xlim(low_value, high_value)
+        self.ax_hist.set_xticks([])
+        self.ax_hist.set_yticks([])
 
         self.slider_high = Slider(ax_high, clip, label='Max',
                                   value=high_value,
@@ -85,27 +87,27 @@ class ContrastSetter(Plugin):
                             256).reshape((1,256))
         cbar_extent = (self.low,
                        self.high,
-                       self.ax_histo.axis()[2],
-                       self.ax_histo.axis()[3])
+                       self.ax_hist.axis()[2],
+                       self.ax_hist.axis()[3])
         black_rectangle = zeros((1,2))
-        black_extent = (self.ax_histo.axis()[0],
+        black_extent = (self.ax_hist.axis()[0],
                         self.low,
-                        self.ax_histo.axis()[2],
-                        self.ax_histo.axis()[3])
+                        self.ax_hist.axis()[2],
+                        self.ax_hist.axis()[3])
         white_rectangle = ones((1,2)) * self.bin_centers[-1]
         white_extent = (self.high,
-                        self.ax_histo.axis()[1],
-                        self.ax_histo.axis()[2],
-                        self.ax_histo.axis()[3])
-        if len(self.ax_histo.images) > 2:
-            del self.ax_histo.images[-3:]
-        self.ax_histo.imshow(black_rectangle, aspect='auto',
+                        self.ax_hist.axis()[1],
+                        self.ax_hist.axis()[2],
+                        self.ax_hist.axis()[3])
+        if len(self.ax_hist.images) > 2:
+            del self.ax_hist.images[-3:]
+        self.ax_hist.imshow(black_rectangle, aspect='auto',
                              extent=black_extent)
-        self.ax_histo.imshow(white_rectangle, aspect='auto',
+        self.ax_hist.imshow(white_rectangle, aspect='auto',
                              extent=white_extent,
                              vmin=self.bin_centers[0],
                              vmax=self.bin_centers[-1])
-        self.ax_histo.imshow(colorbar, aspect='auto',
+        self.ax_hist.imshow(colorbar, aspect='auto',
                              extent=cbar_extent)
 
     def reset(self):
