@@ -84,30 +84,20 @@ class ContrastSetter(Plugin):
     def draw_colorbar(self):
         colorbar = linspace(self.low, self.high,
                             256).reshape((1,256))
-        cbar_extent = (self.low,
-                       self.high,
-                       self.ax_hist.axis()[2],
-                       self.ax_hist.axis()[3])
-        black_rectangle = zeros((1,2))
-        black_extent = (self.ax_hist.axis()[0],
-                        self.low,
-                        self.ax_hist.axis()[2],
-                        self.ax_hist.axis()[3])
-        white_rectangle = ones((1,2)) * self.bin_centers[-1]
-        white_extent = (self.high,
-                        self.ax_hist.axis()[1],
-                        self.ax_hist.axis()[2],
-                        self.ax_hist.axis()[3])
+        black_rectangle = zeros((1, 2))
+        white_rectangle = ones((1, 2)) * self.bin_centers[-1]
         if len(self.ax_hist.images) > 2:
             del self.ax_hist.images[-3:]
+
+        xmin, xmax, ymin, ymax = self.ax_hist.axis()
         self.ax_hist.imshow(black_rectangle, aspect='auto',
-                             extent=black_extent)
+                            extent=(xmin, self.low, ymin, ymax))
         self.ax_hist.imshow(white_rectangle, aspect='auto',
-                             extent=white_extent,
-                             vmin=self.bin_centers[0],
-                             vmax=self.bin_centers[-1])
+                            extent=(self.high, xmax, ymin, ymax),
+                            vmin=self.bin_centers[0],
+                            vmax=self.bin_centers[-1])
         self.ax_hist.imshow(colorbar, aspect='auto',
-                             extent=cbar_extent)
+                            extent=(self.low, self.high, ymin, ymax))
 
     def reset(self):
         low, high = self.bin_centers[[0, -1]]
