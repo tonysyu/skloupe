@@ -111,6 +111,8 @@ class Slider(base.MPLWidgetCompatibility, mwidgets.Slider):
 
     @value.setter
     def value(self, value):
+        value = max(self.valmin, value)
+        value = min(self.valmax, value)
         self.val = value
         self.line_low.set_xdata([self.valmin, value])
         self.line_high.set_xdata([value, self.valmax])
