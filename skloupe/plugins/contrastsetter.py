@@ -59,17 +59,13 @@ class ContrastSetter(Plugin):
         self.slider_high.slidermin = self.slider_low
 
         # initialize histogram background
-        black_rectangle = zeros((1, 2))
-        white_rectangle = ones((1, 2)) * self.cmax
-        gradient = linspace(self.cmin, self.cmax, 256).reshape((1, 256))
-
         imshow = self.ax_hist.imshow
         xmin, xmax, ymin, ymax = self.ax_hist.axis()
-        self.black_bg = imshow(black_rectangle, aspect='auto',
+        self.black_bg = imshow(zeros((1, 2)), aspect='auto',
                                extent=(xmin, self.cmin, ymin, ymax))
-        self.white_bg = imshow(white_rectangle, aspect='auto',
-                               extent=(self.cmax, xmax, ymin, ymax),
-                               vmin=self.cmin, vmax=self.cmax)
+        self.white_bg = imshow(ones((1, 2)), aspect='auto', vmin=0, vmax=1,
+                               extent=(self.cmax, xmax, ymin, ymax))
+        gradient = linspace(self.cmin, self.cmax, 256).reshape((1, 256))
         self.grad_bg = imshow(gradient, aspect='auto',
                               extent=(self.cmin, self.cmax, ymin, ymax))
 
