@@ -38,7 +38,7 @@ class ContrastSetter(Plugin):
         clip = low_value, high_value
 
         hist_lines = ax_histo.step(self.bin_centers, self.hist,
-                                   color = 'r', lw = 2, alpha = 1.)
+                                   color='r', lw=2, alpha=1.)
         self.ax_histo.set_xlim(low_value, high_value)
         self.ax_histo.set_xticks([])
         self.ax_histo.set_yticks([])
@@ -65,21 +65,21 @@ class ContrastSetter(Plugin):
                    "+ and - keys or mouse scroll\n"
                    "also change the contrast\n")
         return helpstr
-        
+
     @property
     def low(self):
         return self.slider_low.value
-    
+
     @property
     def high(self):
         return self.slider_high.value
 
-    def update_image(self, event = None):
+    def update_image(self, event=None):
         self.draw_colorbar()
         self.imgview.climits = (self.low, self.high)
         self.imgview.redraw()
         self.redraw()
-        
+
     def draw_colorbar(self):
         colorbar = linspace(self.low, self.high,
                             256).reshape((1,256))
@@ -100,14 +100,14 @@ class ContrastSetter(Plugin):
         if len(self.ax_histo.images) > 2:
             del self.ax_histo.images[-3:]
         self.ax_histo.imshow(black_rectangle, aspect='auto',
-                             extent = black_extent)
+                             extent=black_extent)
         self.ax_histo.imshow(white_rectangle, aspect='auto',
-                             extent = white_extent,
+                             extent=white_extent,
                              vmin=self.bin_centers[0],
                              vmax=self.bin_centers[-1])
-        self.ax_histo.imshow(colorbar, aspect = 'auto',
-                             extent = cbar_extent)
-        
+        self.ax_histo.imshow(colorbar, aspect='auto',
+                             extent=cbar_extent)
+
     def reset(self):
         low, high = self.bin_centers[[0, -1]]
         self.slider_low.value = low
@@ -133,7 +133,7 @@ class ContrastSetter(Plugin):
         self.slider_low.value = low
         self.slider_high.value = high
         self.update_image()
-        
+
     def on_scroll(self, event):
         if not event.inaxes: return
         if event.button == 'up':
