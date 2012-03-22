@@ -39,8 +39,7 @@ class ContrastSetter(Plugin):
         low_value, high_value = self.bin_centers[[0, -1]]
         clip = low_value, high_value
 
-        hist_lines = ax_hist.step(self.bin_centers, self.hist,
-                                   color='r', lw=2, alpha=1.)
+        ax_hist.step(self.bin_centers, self.hist, color='r', lw=2, alpha=1.)
         self.ax_hist.set_xlim(low_value, high_value)
         self.ax_hist.set_xticks([])
         self.ax_hist.set_yticks([])
