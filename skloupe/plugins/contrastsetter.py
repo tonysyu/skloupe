@@ -114,38 +114,33 @@ class ContrastSetter(Plugin):
         self.slider_high.value = self.cmax
         self.update_image()
 
-    def _expand_bonds(self, event):
+    def _expand_limits(self, event):
         if not event.inaxes: return
         span = self.high - self.low
-        low = max(self.slider_low.value - span / 20.,
-                  self.slider_low.valmin)
-        high = min(self.slider_high.value + span / 20.,
-                   self.slider_high.valmax)
-        self.slider_low.value = low
-        self.slider_high.value = high
+        self.slider_low.value -= span / 20.
+        self.slider_high.value += span / 20.
         self.update_image()
 
-    def _restrict_bonds(self, event):
+    def _restrict_limits(self, event):
         if not event.inaxes: return
         span = self.high - self.low
-        low = self.slider_low.value + span / 20.
-        high = self.slider_high.value - span / 20.
-        self.slider_low.value = low
-        self.slider_high.value = high
+        self.slider_low.value += span / 20.
+        self.slider_high.value -= span / 20.
         self.update_image()
 
     def on_scroll(self, event):
         if not event.inaxes: return
         if event.button == 'up':
-            self._expand_bonds(event)
+            self._expand_limits(event)
         elif event.button == 'down':
-            self._restrict_bonds(event)
+            self._restrict_limits(event)
 
     def on_key_press(self, event):
         if not event.inaxes: return
         elif event.key == '+':
-            self._expand_bonds(event)
+            self._expand_limits(event)
         elif event.key == '-':
-            self._restrict_bonds(event)
+            self._restrict_limits(event)
         elif event.key == 'r':
             self.reset()
+
