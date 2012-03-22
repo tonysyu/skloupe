@@ -36,38 +36,38 @@ class ContrastSetter(Plugin):
         else:
             bins = 256
         self.hist, self.bin_centers = histogram(self.image.data, bins)
-        low_value, high_value = self.bin_centers[[0, -1]]
-        clip = low_value, high_value
+        self.cmin = self.bin_centers[0]
+        self.cmax = self.bin_centers[-1]
 
         ax_hist.step(self.bin_centers, self.hist, color='r', lw=2, alpha=1.)
-        self.ax_hist.set_xlim(low_value, high_value)
+        self.ax_hist.set_xlim(self.cmin, self.cmax)
         self.ax_hist.set_xticks([])
         self.ax_hist.set_yticks([])
 
-        self.slider_high = Slider(ax_high, clip, label='Max',
-                                  value=high_value,
+        slider_range = self.cmin, self.cmax
+        self.slider_high = Slider(ax_high, slider_range, label='Max',
+                                  value=self.cmax,
                                   on_release=self.update_image)
-        self.slider_low = Slider(ax_low, clip, label='Min',
-                                 value=low_value,
+        self.slider_low = Slider(ax_low, slider_range, label='Min',
+                                 value=self.cmin,
                                  on_release=self.update_image)
         self.slider_low.slidermax = self.slider_high
         self.slider_high.slidermin = self.slider_low
 
         # initialize histogram background
         black_rectangle = zeros((1, 2))
-        white_rectangle = ones((1, 2)) * self.bin_centers[-1]
-        gradient = linspace(self.low, self.high, 256).reshape((1, 256))
+        white_rectangle = ones((1, 2)) * self.cmax
+        gradient = linspace(self.cmin, self.cmax, 256).reshape((1, 256))
 
         imshow = self.ax_hist.imshow
         xmin, xmax, ymin, ymax = self.ax_hist.axis()
         self.black_bg = imshow(black_rectangle, aspect='auto',
-                               extent=(xmin, low_value, ymin, ymax))
+                               extent=(xmin, self.cmin, ymin, ymax))
         self.white_bg = imshow(white_rectangle, aspect='auto',
-                               extent=(high_value, xmax, ymin, ymax),
-                               vmin=self.bin_centers[0],
-                               vmax=self.bin_centers[-1])
+                               extent=(self.cmax, xmax, ymin, ymax),
+                               vmin=self.cmin, vmax=self.cmax)
         self.grad_bg = imshow(gradient, aspect='auto',
-                              extent=(low_value, high_value, ymin, ymax))
+                              extent=(self.cmin, self.cmax, ymin, ymax))
 
         self.connect_event('key_press_event', self.on_key_press)
         self.connect_event('scroll_event', self.on_scroll)
@@ -104,9 +104,8 @@ class ContrastSetter(Plugin):
         self.grad_bg.set_extent((self.low, self.high, ymin, ymax))
 
     def reset(self):
-        low, high = self.bin_centers[[0, -1]]
-        self.slider_low.value = low
-        self.slider_high.value = high
+        self.slider_low.value = self.cmin
+        self.slider_high.value = self.cmax
         self.update_image()
 
     def _expand_bonds(self, event):
