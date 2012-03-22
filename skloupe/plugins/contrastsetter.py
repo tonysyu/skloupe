@@ -53,6 +53,22 @@ class ContrastSetter(Plugin):
         self.slider_low.slidermax = self.slider_high
         self.slider_high.slidermin = self.slider_low
 
+        # initialize histogram background
+        black_rectangle = zeros((1, 2))
+        white_rectangle = ones((1, 2)) * self.bin_centers[-1]
+        gradient = linspace(self.low, self.high, 256).reshape((1, 256))
+
+        imshow = self.ax_hist.imshow
+        xmin, xmax, ymin, ymax = self.ax_hist.axis()
+        self.black_bg = imshow(black_rectangle, aspect='auto',
+                               extent=(xmin, low_value, ymin, ymax))
+        self.white_bg = imshow(white_rectangle, aspect='auto',
+                               extent=(high_value, xmax, ymin, ymax),
+                               vmin=self.bin_centers[0],
+                               vmax=self.bin_centers[-1])
+        self.grad_bg = imshow(gradient, aspect='auto',
+                              extent=(low_value, high_value, ymin, ymax))
+
         self.connect_event('key_press_event', self.on_key_press)
         self.connect_event('scroll_event', self.on_scroll)
         self.original_image = self.imgview.image.copy()
@@ -76,28 +92,16 @@ class ContrastSetter(Plugin):
         return self.slider_high.value
 
     def update_image(self, event=None):
-        self.draw_colorbar()
+        self.draw_background()
         self.imgview.climits = (self.low, self.high)
         self.imgview.redraw()
         self.redraw()
 
-    def draw_colorbar(self):
-        colorbar = linspace(self.low, self.high,
-                            256).reshape((1,256))
-        black_rectangle = zeros((1, 2))
-        white_rectangle = ones((1, 2)) * self.bin_centers[-1]
-        if len(self.ax_hist.images) > 2:
-            del self.ax_hist.images[-3:]
-
+    def draw_background(self):
         xmin, xmax, ymin, ymax = self.ax_hist.axis()
-        self.ax_hist.imshow(black_rectangle, aspect='auto',
-                            extent=(xmin, self.low, ymin, ymax))
-        self.ax_hist.imshow(white_rectangle, aspect='auto',
-                            extent=(self.high, xmax, ymin, ymax),
-                            vmin=self.bin_centers[0],
-                            vmax=self.bin_centers[-1])
-        self.ax_hist.imshow(colorbar, aspect='auto',
-                            extent=(self.low, self.high, ymin, ymax))
+        self.black_bg.set_extent((xmin, self.low, ymin, ymax))
+        self.white_bg.set_extent((self.high, xmax, ymin, ymax))
+        self.grad_bg.set_extent((self.low, self.high, ymin, ymax))
 
     def reset(self):
         low, high = self.bin_centers[[0, -1]]
