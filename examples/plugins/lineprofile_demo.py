@@ -7,6 +7,6 @@ image = data.camera()
 # Maybe LineProfile should save a reference of itself in ImageWindow
 # and then clear itself when closed.
 view = ImageViewer(image)
-lp = LineProfile(view, limits='dtype')
+LineProfile(view, limits='dtype')
 view.show()
 

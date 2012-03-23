@@ -4,5 +4,5 @@ from skloupe.plugins import ContrastSetter
 
 image = data.coins()
 view = ImageViewer(image)
-cs = ContrastSetter(view)
+ContrastSetter(view)
 view.show()

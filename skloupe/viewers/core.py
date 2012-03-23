@@ -31,12 +31,15 @@ class ImageViewer(object):
     climits : tuple
         Intensity range (minimum, maximum) of *displayed* image. Intensity
         values above and below limits are clipped, but remain in image array.
+    plugins : list
+        List of attached plugins.
     """
 
     def __init__(self, image, **kwargs):
         self._image = image.copy()
         self.fig, self.ax = figimage(image, **kwargs)
         self.ax.autoscale(enable=False)
+        self.plugins = []
 
         self.canvas = self.fig.canvas
         if len(self.ax.images) > 0:

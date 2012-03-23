@@ -39,6 +39,9 @@ class Plugin(object):
     def __init__(self, image_window, useblit=None, figsize=None, figure=None):
         self.imgview = image_window
         self.image = self.imgview._img
+        # Add Plugin to imgview's list to prevent garbage-collection.
+        # Reference must be removed when closing plugin.
+        self.imgview.plugins.append(self)
 
         if figure is None:
             if figsize is None:
@@ -83,6 +86,7 @@ class Plugin(object):
         """
         self.disconnect_image_events()
         self.remove_artists()
+        self.imgview.plugins.remove(self)
         self.imgview.redraw()
 
     def ignore(self, event):

@@ -5,6 +5,6 @@ from skloupe.plugins import EdgeDetector
 
 image = skimage.img_as_float(data.camera())
 view = ImageViewer(image)
-ed = EdgeDetector(view)
+EdgeDetector(view)
 view.show()
 
