@@ -57,6 +57,13 @@ class ImageViewer(object):
                               self.ax.patches,
                               self.ax.texts]
 
+        self.connect_event('close_event', self.on_close)
+
+    def on_close(self, event):
+        # Close all connected plugins
+        for p in self.plugins:
+            plt.close(p.figure)
+
     @property
     def image(self):
         return self._image
