@@ -5,6 +5,7 @@ from numpy import linspace, zeros, ones
 
 from .base import Plugin
 from ..widgets.slider import Slider
+from .. import utils
 
 
 __all__ = ['ContrastSetter']
@@ -23,7 +24,8 @@ class ContrastSetter(Plugin):
     """
 
     def __init__(self, image_window):
-        figure = plt.figure(figsize=(6.5, 2))
+        with utils.toolbar_off():
+            figure = plt.figure(figsize=(6.5, 2))
         ax_hist = plt.subplot2grid((6, 1), (0, 0), rowspan=4)
         ax_low = plt.subplot2grid((6, 1), (4, 0), rowspan=1)
         ax_high = plt.subplot2grid((6, 1), (5, 0), rowspan=1)

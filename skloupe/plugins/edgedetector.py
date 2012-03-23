@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from .base import Plugin
 from ..widgets.slider import Slider
+from .. import utils
 
 
 __all__ = ['EdgeDetector']
@@ -22,7 +23,8 @@ class EdgeDetector(Plugin):
     def __init__(self, image_window, sigma_range=(0, 5), low_range=(0, 1),
                  high_range=(0, 1)):
 
-        figure, axes = plt.subplots(nrows=3, figsize=(6, 1))
+        with utils.toolbar_off():
+            figure, axes = plt.subplots(nrows=3, figsize=(6, 1))
         ax_sigma, ax_low, ax_high = axes
         Plugin.__init__(self, image_window, figure=figure)
 

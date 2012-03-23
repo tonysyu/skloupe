@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-__all__ = ['figimage']
+__all__ = ['figimage', 'toolbar_off']
 
 
 def figimage(image, scale=1, dpi=None, **kwargs):
@@ -36,4 +36,28 @@ def figimage(image, scale=1, dpi=None, **kwargs):
     ax.imshow(image, **kwargs)
     return fig, ax
 
+
+class toolbar_off(object):
+    """Context manager to remove toolbar from a figure
+
+    This is a terrible hack, but I couldn't figure out a GUI-neutral way to
+    remove toolbars.
+
+    Examples
+    --------
+    >>> with toolbar_off():
+    ...     plt.figure()
+
+    """
+
+    def __init__(self, no_toolbar=True):
+        self.no_toolbar = no_toolbar
+
+    def __enter__(self):
+        self.original_state = plt.rcParams['toolbar']
+        if self.no_toolbar:
+            plt.rcParams['toolbar'] = 'none'
+
+    def __exit__(self, type, value, traceback):
+        plt.rcParams['toolbar'] = self.original_state
 

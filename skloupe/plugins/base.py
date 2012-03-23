@@ -1,6 +1,8 @@
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+from .. import utils
+
 
 __all__ = ['Plugin']
 
@@ -17,6 +19,9 @@ class Plugin(object):
         backends. If None, set to True when using Agg backend, otherwise False.
     figure : :class:`~matplotlib.figure.Figure`
         If None, create a figure with a single axes.
+    no_toolbar : bool
+        If True, figure created by plugin has no toolbar. This has no effect
+        on figures passed into `Plugin`.
 
     Attributes
     ----------
@@ -36,7 +41,8 @@ class Plugin(object):
         If False, the widget does not respond to events.
     """
 
-    def __init__(self, image_window, useblit=None, figsize=None, figure=None):
+    def __init__(self, image_window, useblit=None, figsize=None, figure=None,
+                 no_toolbar=True):
         self.imgview = image_window
         self.image = self.imgview._img
         # Add Plugin to imgview's list to prevent garbage-collection.
@@ -46,7 +52,8 @@ class Plugin(object):
         if figure is None:
             if figsize is None:
                 figsize = plt.rcParams['figure.figsize']
-            figure = plt.figure(figsize=figsize)
+            with utils.toolbar_off(no_toolbar):
+                figure = plt.figure(figsize=figsize)
             self.figure = figure
             self.canvas = figure.canvas
             self.ax = figure.add_subplot(111)
