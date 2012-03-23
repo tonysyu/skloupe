@@ -23,6 +23,8 @@ def figimage(image, scale=1, dpi=None, **kwargs):
         Dots per inch for figure. If None, use the default rcParam.
     """
     dpi = dpi if dpi is not None else plt.rcParams['figure.dpi']
+    kwargs.setdefault('interpolation', 'nearest')
+    kwargs.setdefault('cmap', 'gray')
 
     h, w, d = np.atleast_3d(image).shape
     figsize = np.array((w, h), dtype=float) / dpi * scale
