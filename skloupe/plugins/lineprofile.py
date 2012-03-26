@@ -49,6 +49,9 @@ class LineProfile(Plugin):
         else:
             raise ValueError("Unrecognized `limits`: %s" % limits)
 
+        if not limits is None:
+            self.ax.set_ylim(self.limits)
+
         h, w = self.image.shape
 
         self._init_end_pts = np.array([[w/3, h/2], [2*w/3, h/2]])
