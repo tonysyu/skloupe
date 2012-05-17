@@ -2,9 +2,8 @@
 Image Viewer SciKit (Toolbox for SciPy)
 =======================================
 
-.. note::
-   This module is (possibly) being merged into scikits-image (PR 165 [3]), and
-   is *not* being actively developed on this repo.
+**NOTE**: This module is (possibly) being merged into scikits-image (PR 165
+[3]_), and is *not* being actively developed on this repo.
 
 `scikits-loupe` (a.k.a. `skloupe`) provides an image viewing interface based on
 matplotlib_ and is closely affiliated with skimage_. The name is a combination
