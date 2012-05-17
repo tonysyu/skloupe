@@ -2,6 +2,10 @@
 Image Viewer SciKit (Toolbox for SciPy)
 =======================================
 
+.. note::
+   This module is (possibly) being merged into scikits-image (PR 165 [3]), and
+   is *not* being actively developed on this repo.
+
 `scikits-loupe` (a.k.a. `skloupe`) provides an image viewing interface based on
 matplotlib_ and is closely affiliated with skimage_. The name is a combination
 of SciKits_ (toolkits for scientific python) and "loupe_" (a magnifying glass
@@ -47,6 +51,7 @@ Known Issues
 
 .. [1] https://github.com/matplotlib/matplotlib/pull/716
 .. [2] https://github.com/matplotlib/matplotlib/pull/756
+.. [3] https://github.com/scikits-image/scikits-image/pull/165
 
 
 .. _numpy: http://numpy.scipy.org/
